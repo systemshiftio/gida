@@ -102,6 +102,7 @@ REST_REGISTRATION = {
     'REGISTER_EMAIL_VERIFICATION_ENABLED': True,
     'RESET_PASSWORD_VERIFICATION_URL': 'http://gida.africa:8000/reset-password/',
     'RESET_PASSWORD_VERIFICATION_PERIOD': timedelta(seconds=180),
+    'REGISTER_OUTPUT_SERIALIZER_CLASS': 'api.serializers.RegisterToken',
 
     'VERIFICATION_FROM_EMAIL': 'no-reply@gida.africa',
 }

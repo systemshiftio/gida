@@ -2,6 +2,7 @@ from rest_framework import serializers
 import api.models as am
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from  rest_registration.api.serializers import DefaultRegisterUserSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class GidaUserSerializer(serializers.ModelSerializer):
@@ -34,15 +35,30 @@ class TokenObtainPairSerializer(TokenObtainPairSerializer):
 
         return token
     
+class RegisterToken(serializers.Serializer):
+    access_token = serializers.CharField(max_length=1000)
+    refresh = serializers.CharField(max_length=1000)
+    
+    class Meta:
+        fields = ('access_token', 'refesh')
+    
     
 class DefaultRegisterUserSerializer(DefaultRegisterUserSerializer):
-   # password_confirm = serializers.CharField(write_only=True, min_length=8)
-
+    
+    def get_tokens_for_user(self, user):
+        refresh = RefreshToken.for_user(user)
+        refresh['image'] = user.image
+        refresh['id'] = user.id
+        refresh['username'] = user.username
+        refresh['phone'] = user.phone
+        refresh['email'] = user.email
+        return{
+            'access_token': str(refresh.access_token),
+            'refresh': str(refresh.access_token),
+            }
+   
     class Meta:
         model = am.GidaUser
-        exclude = ('password','user_permissions', 'groups', 
-                   'is_staff', 'is_superuser', 'last_login')
-
 
     def create(self, validated_data):
         email_message = """
@@ -71,4 +87,5 @@ class DefaultRegisterUserSerializer(DefaultRegisterUserSerializer):
             #         [validated_data['email']],
             #         fail_silently=False
             #         )
-        return gidauser
+            response =self.get_tokens_for_user(gidauser)
+        return response
