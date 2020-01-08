@@ -13,10 +13,11 @@ class TokenObtainPairView(TokenObtainPairView):
 
 
 class SearchApartmentViewset(viewsets.ViewSet):
+    
     @action(detail=False)
     def search_apartment(self, request):
         try:
-            apartment = am.Apartment.object.filter(Q(address=self.request.query_params.get('address')) |
+            apartment = am.Apartment.objects.filter(Q(address=self.request.query_params.get('address')) |
                                                    Q(price=self.request.query_params.get('price')),                                           
                                                     location=self.request.query_params.get('location'),
                                                     state=self.request.query_params.get('state'))
@@ -24,4 +25,23 @@ class SearchApartmentViewset(viewsets.ViewSet):
         except am.Apartment.DoesNotExist:
             return Response({'message', 'Apartment does not exist'})
         return Response(serializer.data)
-        
+    
+    
+class BookApartment(viewsets.ViewSet):
+    
+    @action(detail=False, methods=['POST'])
+    def book_apartment(self, request):
+        message = ''
+        availability = am.Apartment.objects.get(apartment=self.request.query_params.get('apartment'), 
+                                                occupied=False,
+                                                verified=True)
+        if availability:
+            availability.occupied = True
+            availability.number_of_checkins = F('number_of_checkins') + 1
+            message = 'Booked successfully'
+        else:
+            message = 'Something went wrong'
+        return Response({'message': message})
+    
+
+

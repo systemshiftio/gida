@@ -40,14 +40,14 @@ class UserManager(BaseUserManager):
 
 
 class GidaUser(AbstractUser):
-    email = models.EmailField(null=True)
+    email = models.EmailField(null=True, unique=True)
     username = models.CharField(max_length=50, unique=True)
     image = models.TextField(null=True,
             default='https://res.cloudinary.com/systemshiftio/image/upload/v1565557753/cloudinary_qyi649.jpg')
     
     verified = models.BooleanField(default=False)
     dob = models.DateField(null=True)
-    phone = models.CharField(max_length=11, null=True)
+    phone = models.CharField(max_length=11, null=True, unique=True)
     created = models.DateTimeField(auto_now_add=True)
     
 
@@ -90,11 +90,18 @@ class Apartment(models.Model):
     images = JSONField(default=list)
     price = models.DecimalField(max_digits=6, null=True, decimal_places=2)
     star = models.IntegerField(default=0)
+    number_of_checkins = models.IntegerField(default=0)
     state = models.CharField(max_length=50, choices=STATE)
     country = models.CharField(max_length=50, choices=COUNTRY)
     location = models.CharField(max_length=50, choices=LOCATION)
     info = models.TextField(null=True)
+    occupied = models.BooleanField(default=False) # flat to tell if apartment is currently occupied
     owner = models.ForeignKey(GidaUser, on_delete=models.CASCADE)
     verified = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
+    
+
+class BookedApartment(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    tenant = models.ForeignKey(GidaUser, on_delete=models.CASCADE)
     
