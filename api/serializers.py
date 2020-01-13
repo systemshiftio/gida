@@ -22,6 +22,13 @@ class ApartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = am.Apartment
         fields = '__all__'
+        
+    
+class BookApartmentSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = am.BookedApartment
+        fields = ('check_in', 'check_out')
 
 
 class TokenObtainPairSerializer(TokenObtainPairSerializer):

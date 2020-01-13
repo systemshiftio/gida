@@ -28,6 +28,6 @@ urlpatterns = [
     path('', include('waitlist.urls')),
     path('accounts/', include('rest_registration.api.urls')),
     path('token/jwt/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
-    path('api', include('api.urls')),
+    path('', include('api.urls')),
     path('token/jwt', TokenObtainPairView.as_view()),
 ]
