@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, HStoreField
 # Create your models here.
 
 
@@ -48,6 +48,7 @@ class GidaUser(AbstractUser):
     verified = models.BooleanField(default=False)
     dob = models.DateField(null=True)
     phone = models.CharField(max_length=11, null=True, unique=True)
+    star_rating = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
     
 
@@ -88,20 +89,50 @@ class Apartment(models.Model):
     room_type = models.CharField(max_length=50, choices=APARTMENT)
     address = models.CharField(max_length=100)
     images = JSONField(default=list)
+    ammenities = HStoreField()
     price = models.DecimalField(max_digits=6, null=True, decimal_places=2)
-    star = models.IntegerField(default=0)
+    star_rating = models.IntegerField(default=0)
     number_of_checkins = models.IntegerField(default=0)
     state = models.CharField(max_length=50, choices=STATE)
     country = models.CharField(max_length=50, choices=COUNTRY)
     location = models.CharField(max_length=50, choices=LOCATION)
     info = models.TextField(null=True)
-    occupied = models.BooleanField(default=False) # flat to tell if apartment is currently occupied
-    owner = models.ForeignKey(GidaUser, on_delete=models.CASCADE)
+    owner = models.ForeignKey(GidaUser, null=True, on_delete=models.CASCADE)
     verified = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
+    frequency = models.CharField(max_length=10, default="Monthly")
+    is_active = models.BooleanField(default=True)
+    
+    def _str__(self):
+        return self.address
     
 
 class BookedApartment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     tenant = models.ForeignKey(GidaUser, on_delete=models.CASCADE)
+    apartment = models.ForeignKey(Apartment, null=True, on_delete=models.CASCADE)
+    check_in = models.DateField(null=True)
+    check_out = models.DateField(null=True)
+    occupied = models.BooleanField(default=False)
+    # if a user decides to deactivate an apartment, it should send a message
+    # to all users currently not checked in that they can book new apartment
+    
+    
+class ApartmentReview(models.Model):
+    apartment = models.ForeignKey(Apartment, on_delete=models.CASCADE)
+    owner = models.ForeignKey(GidaUser, on_delete=models.CASCADE)
+    content = models.TextField()
+    star = models.IntegerField(default=0)
+    created = models.DateTimeField(auto_now_add=True)
+    
+
+class UserReview(models.Model):
+    user = models.ForeignKey(GidaUser, on_delete=models.CASCADE, related_name='home_owner')
+    owner = models.ForeignKey(GidaUser, on_delete=models.CASCADE, related_name='owner')
+    star = models.IntegerField(default=0)
+    content = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    
+
+    
     

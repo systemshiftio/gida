@@ -7,7 +7,7 @@ import api.views as av
 
 router = DefaultRouter(trailing_slash=False)
 app_router = routers.DefaultRouter()
-app_router.register('search-apartment', av.SearchApartmentViewset, 'search-apartment')
+app_router.register('apartment', av.ApartmentViewset, 'apartment')
 
 
 
