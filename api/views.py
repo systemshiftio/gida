@@ -2,6 +2,8 @@ from django.shortcuts import render
 from rest_framework_simplejwt.views import TokenObtainPairView
 import api.serializers as aps
 import api.models as am
+from django.contrib.auth.hashers import check_password
+import cloudinary
 from django.db.models import Q, F
 from rest_framework import viewsets
 import api.permmisions as ap
@@ -12,6 +14,42 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 
 class TokenObtainPairView(TokenObtainPairView):
     serializer_class = aps.TokenObtainPairSerializer
+    
+
+class UserViewset(viewsets.ViewSet):
+    
+    @action(detail=False, methods=['post'])
+    def upload_profile_image(self, request):
+        '''
+        profile image should be passed the the body
+        of the request
+        '''
+        try:
+            user = am.GidaUser.objects.get(username=request.user.username)
+            serializer = aps.UserSerializer(data=request.data)
+            if serializer.is_valid():
+                data = request.data['image']
+                # image = cloudinary.uploader.upload(data)
+                # user.header_image = image['url']
+                user.save()
+            return Response({'header_image': data})
+        except Exception:
+            return Response({'status': 'Upload failed'})
+        
+    @action(detail=False, methods=['post'])
+    def verify_password(self, request):
+        try:
+            email = request.user.email
+            password = request.data['password']
+            user = am.GidaUser.objects.get(email=email)  
+            hash_password = user.password 
+            password_checker = check_password(password, hash_password)
+            if password_checker:
+                return Response({'message': True})
+            else:
+                return Response({'message': False})
+        except am.GidaUser.DoesNotExist:
+            return Response({'message': 'Password or email do not match'})
 
 
 class ApartmentViewset(viewsets.ModelViewSet):
@@ -93,6 +131,7 @@ class ApartmentViewset(viewsets.ModelViewSet):
     
     @action(detail=False)
     def get_apartment_by_id(self, request):
+        # get apartment star
         response = {}
         try:
             apartment = am.Apartment.objects.get(id=self.request.query_params.get('id'), is_active=True)
@@ -189,6 +228,9 @@ class ApartmentViewset(viewsets.ModelViewSet):
         except am.Apartment.DoesNotExist:
             message = 'Apartment does not exist'
         return Response({'message': message})
+    
+
+# class ReviewViewSet(viewsets.ViewSet)
             
         
         

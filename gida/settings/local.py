@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'rest_registration',
     'waitlist',
     'api',
+    'investment',
+    'transaction'
 ]
 
 MIDDLEWARE = [

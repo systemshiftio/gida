@@ -50,6 +50,9 @@ class GidaUser(AbstractUser):
     phone = models.CharField(max_length=11, null=True, unique=True)
     star_rating = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
+    phone_verified = models.BooleanField(default=False)
+    email_verified = models.BooleanField(default=False)
+    document_verified = models.BooleanField(default=False)
     
 
     USERNAME_FIELD = 'username'
@@ -68,7 +71,7 @@ APARTMENT = (
      )
  
 STATE = (
-    ('', ''),
+    ('Abuja', 'Abuja'),
     ('Lagos', 'Lagos')
  )
  
