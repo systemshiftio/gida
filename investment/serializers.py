@@ -1,4 +1,4 @@
-from rest_framwork import serializers
+from rest_framework import serializers
 import api.models as am
 import investment.models as im
 
