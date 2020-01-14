@@ -47,7 +47,7 @@ class TokenObtainPairSerializer(TokenObtainPairSerializer):
         token['id'] = user.id
         token['username'] = user.username
 
-        return token
+        return token 
     
 class RegisterToken(serializers.Serializer):
     access_token = serializers.CharField(max_length=1000)
