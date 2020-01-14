@@ -29,5 +29,6 @@ urlpatterns = [
     path('accounts/', include('rest_registration.api.urls')),
     path('token/jwt/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('', include('api.urls')),
+    path('', include('investment.urls')),
     path('token/jwt', TokenObtainPairView.as_view()),
 ]
