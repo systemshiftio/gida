@@ -15,6 +15,13 @@ class GidaUserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         gidauser = am.GidaUser.objects.create_user(**validated_data)
         return gidauser
+    
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = am.GidaUser
+        fields = '__all_'
+
 
 
 class ApartmentSerializer(serializers.ModelSerializer):
