@@ -84,18 +84,6 @@ SIMPLE_JWT = {
     'USER_ID_FIELD': 'id',
 }
 
-EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
-SENDGRID_API_KEY = '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'
-SENDGRID_SANDBOX_MODE_IN_DEBUG = False
-
-# EMAIL_HOST = 'smtp.sendgrid.net'
-# EMAIL_PORT  = 587
-# EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='Systemshift')
-# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='&1pass21?')
-# Enable_USE_SSL = True
-
-
-
 REST_REGISTRATION = {
     'REGISTER_SERIALIZER_CLASS': 'api.serializers.DefaultRegisterUserSerializer',
     'REGISTER_EMAIL_VERIFICATION_URL': 'http://localhost:3000/reset-password/',
