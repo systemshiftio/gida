@@ -9,7 +9,7 @@ Django==2.2.9
 django-cors-middleware==1.5.0
 django-rest-registration==0.5.3
 django-sendgrid-v5==0.8.1
-djangorestframework==3.9.4
+djangorestframework==3.11.2
 djangorestframework-simplejwt==4.4.0
 future==0.18.2
 gunicorn==20.0.4
